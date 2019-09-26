@@ -1,0 +1,83 @@
+
+#define SIZE  5
+#define VMAX  5
+#define VMIN -5
+
+int vals[SIZE];
+int max;
+
+inline genValue(i)
+{
+   int v;
+   v = 0;
+   do
+    :: (v < VMAX) -> v++;
+    :: (v > VMIN) -> v--;
+    :: true -> break;
+   od
+   vals[i] = v;
+}
+
+inline initArray()
+{
+   byte i;
+   i = 0;
+   do
+    :: (i < SIZE) -> 
+       genValue(i);
+       i++;
+    :: (i >= SIZE) -> break;
+   od
+}
+
+inline printArray()
+{
+   byte i;
+   i = 0;
+   do
+    :: (i < SIZE) -> 
+       printf("vals[%d] = %d\n",i,vals[i]);
+       i++;
+    :: (i >= SIZE) -> break;
+   od
+}
+
+inline findMax()
+{
+   byte i;
+   i = 0;
+   max = 0;
+   do
+    :: (i < SIZE) -> 
+       if
+        :: (vals[i] > max) -> max = vals[i];
+        :: else -> skip;
+       fi
+       i++;
+    :: else -> break;
+   od
+}
+
+inline verifyMax()
+{
+   byte i;
+   i = 0;
+   do
+    :: (i < SIZE) -> 
+       assert(vals[i] <= max);
+       i++;
+    :: (i >= SIZE) -> break;
+   od
+}
+
+init
+{
+   initArray();
+   printArray();
+   findMax();
+   verifyMax();
+   printf("max is %d\n",max);
+}
+
+
+

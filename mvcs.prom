@@ -1,0 +1,111 @@
+#define SIZE 8
+#define VMAX 10
+#define VMIN -10
+
+int A[SIZE];
+int max;
+int j,k;
+int size;
+int start=0;
+int end=0;
+int s=0;
+
+inline genValue(i)
+{
+   int v;
+   v = 0;
+   do
+    :: (v < VMAX) -> v++;
+    :: (v > VMIN) -> v--;
+    :: true -> break;
+   od
+   A[i] = v;
+}
+
+inline initArray()
+{
+   byte i;
+   i = 0;
+   do
+    :: (i < SIZE) -> 
+       genValue(i);
+       i++;
+    :: (i >= SIZE) -> break;
+   od
+   size=i+1;
+}
+
+inline printArray()
+{
+   byte i;
+   i = 0;
+   do
+    :: (i < SIZE) -> 
+       printf("vals[%d] = %d\n",i,A[i]);
+       i++;
+    :: (i >= SIZE) -> break;
+   od
+}
+
+
+inline findMax()
+{
+   int i;
+   i=0;
+   j = -10;
+   k = 0;
+   
+   do
+   :: (i< SIZE) -> k = k + A[i];
+      if
+        :: ( j < k ) -> j = k;
+		    start = s ;
+            end = i ; 
+        :: else -> skip;
+      fi
+	  
+      if
+        :: ( k < 0) -> k=0;
+		    s = i+1
+        :: else -> skip
+      fi
+      i++;
+   :: else -> break;
+   od
+   
+  printf("The max value of array sub sequence is %d\n",j);
+  printf("The start index is %d\n",start);
+  printf("The end index is %d\n",end);
+  
+  
+}
+
+inline verifyMax()
+{
+   int i;
+   i=0;
+   int p = -10;
+   k = 0;
+   do
+   :: (i< SIZE) -> k = k + A[i];
+      if
+        :: ( p < k ) -> p = k; assert(p<=k);
+        :: else -> skip;
+      fi
+	  
+      if
+        :: ( k < 0) -> k=0;
+        :: else -> skip
+      fi
+      i++;
+   :: else -> break;
+   od
+}
+
+init
+{
+  initArray();
+  printArray();
+  findMax();
+  verifyMax();
+}

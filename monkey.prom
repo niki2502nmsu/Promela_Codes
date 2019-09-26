@@ -1,0 +1,54 @@
+
+#define NUMMONKEYS 10
+#define MAXONROPE 4
+
+mtype:side = { EAST, WEST};
+mtype:rope = { EMPTY, EAST2WEST, WEST2EAST};
+
+mtype:rope rope = EMPTY; 
+int numberOnRope=0;
+
+proctype monkey(int id; mtype:side initside)
+{
+   mtype:side side=initside;
+   bool travelling=false;
+   printf("Iam monkey %d on side %e\n",id,side);
+   do
+   ::(!travelling && (rope==EMPTY || (side==EAST && rope==EAST2WEST && numberOnRope < MAXONROPE) ||
+      (side==WEST &&rope==WEST2EAST && numberOnRope <MAXONROPE)) ->
+      printf("Moving to other side...\n",id);
+      if
+      :: (side==EAST)-> side=WEST;
+      :: (side==WEST)-> side=EAST;
+      :: else ->skip;
+     fi
+   numberOnRope++;
+   travelling=true;
+  :: (travelling)->
+    printf("%d:Crossing..\n",id);
+  :: (travelling) ->
+    printf("%d: Reached other side\n");
+    if
+    :: (side==EAST) -> side=WEST;
+    :: (side==WEST) -> side=EAST;
+    fi
+    numberOnRope--;
+    travelling=false;
+  ::(!travelling)->
+      printf("Staying on this sisde..\n");
+   od 
+}
+init
+{
+  int i;
+  i=0;
+  do
+  :: (i<NUMMONKEYS -> run monkey(i,EAST); i++;
+  :: (i<NUMMONKEYS -> run monkey(i,WEST); i++;
+  :: else -> break;
+  od
+}
+
+ltl SafetyMaxOnRope{ [] ! (numberOnRope > MAXONROPE) }
+
+

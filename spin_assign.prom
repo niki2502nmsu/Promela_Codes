@@ -1,0 +1,144 @@
+#define SIZE  10
+#define VMAX  50
+#define VMIN -50
+
+int S[SIZE];    //original array
+int SubSequence[SIZE]; //declared subsequence array to verify it later
+int max1;      // max for each iteration
+int Final_max; //final max of sub sequence 
+
+
+inline genValue(i)  //to generate random values for array
+{
+   int v= 0;
+   do
+    :: (v < VMAX) -> v++;
+    :: (v > VMIN) -> v--;
+    :: true -> break;
+   od
+   S[i] = v;
+}
+
+
+
+inline initArray()  
+{
+   byte i;
+   i = 0;
+   do
+    :: (i < SIZE) ->
+       genValue(i);
+       i++;
+    :: (i >= SIZE) -> break;
+   od
+   arraySize = i;
+}
+
+inline printArray() //to print all the values of the array
+{
+   byte i;
+   i = 0;
+   do
+    :: (i < SIZE) ->
+       printf("S[%d] = %d\n",i,S[i]);
+       i++;
+    :: (i >= SIZE) -> break;
+   od
+    printf("\n");
+}
+int arraySize;    
+int start=0;
+int end = 0;
+
+inline findSequence(){   //to find the sequence of the array which produces maximum value
+    int s_index= start;
+    int i=0;
+    printf("The sequence is:");
+    do
+    ::(s_index<=end) -> printf(" %d, ",S[s_index]); 
+	             SubSequence[i]=S[s_index]; 
+				 i++;
+                 s_index++;
+    ::else -> break;
+    od
+	printf("\n");
+   
+}
+
+inline verifySequence(){ //to verify the sequence produced i.e to match each and every value
+      int s_index=start;
+      int sum=0;
+      assert(start<=end && start<SIZE && end<SIZE && start>=0 && end>=0);
+      int i=0;
+      do
+        ::(s_index<=end) -> assert(S[s_index]==SubSequence[i]) ;
+          sum=sum+SubSequence[i];
+           i++;
+           s_index++;
+        ::else -> break;
+     od
+      assert(sum==Final_max);
+       
+}
+
+
+inline findMaxSequence() //to find the maximum value of the sub sequence
+{
+   int i=0;
+   int s=0;
+   Final_max = -50;
+   max1=0;
+   do
+    :: (i < SIZE) -> max1 = max1+S[i];
+             if
+			 :: (Final_max < max1) -> Final_max = max1;
+			    start = s; 
+			    end =i;
+			 :: else -> skip ;
+			 fi
+			 if
+			 :: (max1<0) -> max1=0; 
+			                s=i+1;
+			 :: else ->skip;
+			 fi
+			 i++;
+    :: else -> break;
+   od
+
+	 printf("The maximum sum value of the sub sequence of array is : %d\n",Final_max);
+     
+}
+
+inline verifyMaxSequence()  //to verify the maximum value
+{
+   int finalmax= -50;
+   int i = 0;
+   max1=0;
+   do
+   :: (i < SIZE) -> max1 = (max1+S[i]);
+      if
+      :: (finalmax < max1) -> finalmax=max1; 
+	       assert(finalmax<=Final_max);
+      :: else ->skip;
+      fi
+      if
+      :: (max1<0) -> max1=0;
+      :: else ->skip;
+      fi
+      i=i+1;
+  :: else -> break;
+ od
+
+}
+
+
+init
+{
+   initArray();
+   printArray();
+   findMaxSequence();
+   verifyMaxSequence();
+   findSequence();
+   verifySequence();
+  
+}

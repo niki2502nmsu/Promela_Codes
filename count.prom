@@ -1,0 +1,25 @@
+chan STDIN; 
+init {       
+  int c, nl, nw, nc;        
+  bool inword = false;        
+  do        
+  :: STDIN?c ->               
+      if               
+	  :: c == -1 -> break                
+	  :: c == '\n' -> nc++; nl++                
+	  :: else -> nc++                
+	  fi;                
+	  if                
+	  :: c == ' ' || c == '\t' || c == '\n' ->                        
+	    inword = false                
+	  :: else ->                        
+	    if                       
+	    :: !inword ->                                
+	        nw++; 
+	        inword = true                       
+	    :: else               
+	    fi      
+	 fi        
+	 od;       
+printf("%d\t%d\t%d\n", nl, nw, nc)}
+	 
